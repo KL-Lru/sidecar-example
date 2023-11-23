@@ -14,3 +14,4 @@ name = "main"
 path = "src/main.rs"
 
 [dependencies]
+ctrlc = { version = "3.4", features = ["termination"] }

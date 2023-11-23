@@ -8,9 +8,15 @@ use std::{
 const MINIMAL_HEALTH_RESPONSE: &str = "HTTP/1.1 200 OK\r\n\r\n";
 
 fn main() {
-    println!("Sidecar container wake up!");
+    ctrlc::set_handler(move || {
+        println!("Sidecar container is shutting down!");
+        std::process::exit(0);
+    })
+    .expect("Failed to set SIGTERM handler");
 
-    let listener = TcpListener::bind("0.0.0.0:8080").expect("Failed to bind Port 8080");
+    println!("Sidecar container wake up!");
+    let port = std::env::var("PORT").unwrap_or_else(|_| "8080".to_string());
+    let listener = TcpListener::bind(format!("0.0.0.0:{}", port)).expect("Failed to bind Port");
 
     sleep(Duration::from_secs(10));
 
